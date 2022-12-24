@@ -1,7 +1,8 @@
+//const urlLogin = 'http://127.0.0.1:8000/users/login/'
+const urlLogin = 'https://finalunidad5-production.up.railway.app/users/login/'
+
 const form = document.querySelector("form");
 const inputs = document.querySelectorAll("input");
-
-const urlLogin = 'http://127.0.0.1:8000/users/login/'
 
 form.onsubmit = async function(event) {
     event.preventDefault();
@@ -48,5 +49,11 @@ form.onsubmit = async function(event) {
         }
     }catch(error){
         console.log(error)
+        Swal.fire({
+            title : "¡Error!",
+            text : `${error}`,
+            icon : "error",
+            showConfirmButton: true,
+        });
     }
 };
