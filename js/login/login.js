@@ -1,5 +1,23 @@
-//const urlLogin = 'http://127.0.0.1:8000/users/login/'
-const urlLogin = 'https://finalunidad5-production.up.railway.app/users/login/'
+const urlLogin = 'http://127.0.0.1:8000/users/login/'
+//const urlLogin = 'https://finalunidad5-production.up.railway.app/users/login/'
+
+
+//* LocalStorage ----------------------------------------------------
+let tokenStorage = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
+
+function addToken(token){
+    tokenStorage.push(token);
+    localStorage.setItem("js.tokens", JSON.stringify(tokenStorage));
+}
+console.log(tokenStorage)
+/* Obtener una lista de tokens
+console.log(tokenStorage)
+ Bucle todos los tokens
+tokenStorage.forEach((token)=>{
+    console.log(token)
+}); */
+
+
 
 const form = document.querySelector("form");
 const inputs = document.querySelectorAll("input");
@@ -20,16 +38,16 @@ form.onsubmit = async function(event) {
         });
         //console.log(body)
         //console.log(response)
+
         const data = await response.json();
-			if (data) {
-				console.log(data); //obteniendo datos
-				const setToken = data.access;
-                console.log(setToken) //obteniendo token
-            }
-        
         if (data.id){
+            console.log(data); //obteniendo datos
+            const getterToken = data.tokens.access;
+            console.log(getterToken) //obteniendo token
+            addToken(getterToken)
+
             Swal.fire({
-                text : "Registrado correctamente",
+                text : "Logeado correctamente",
                 icon : "success",
                 showConfirmButton: true,
             });
@@ -49,11 +67,5 @@ form.onsubmit = async function(event) {
         }
     }catch(error){
         console.log(error)
-        Swal.fire({
-            title : "¡Error!",
-            text : `${error}`,
-            icon : "error",
-            showConfirmButton: true,
-        });
     }
 };

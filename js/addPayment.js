@@ -91,3 +91,7 @@ form.onsubmit = async function(event){
 
 }
 
+//! Borrar Local Storage
+function removeLocalStorage(){
+    localStorage.clear();
+}
