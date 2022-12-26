@@ -1,6 +1,8 @@
 const urlUsers = 'http://127.0.0.1:8000/users/' // url Users
 const urlServices = 'http://127.0.0.1:8000/v2/services/' // url Services
 
+const form = document.querySelector("form");
+const inputs = document.querySelectorAll("input");
 const userDiv = document.querySelector("#user-data"); // user name
 const pageService = document.querySelector(".head1"); // admin view
 
@@ -38,32 +40,30 @@ getUsersData()
 /*-----Fin almacen-----*/
 
 
+
 form.onsubmit = async function(event){
     event.preventDefault();
-    const body = {
-        user_id : lastUser,
-        service_id :selectIdService.value,
-    };
+    const body = {};
     inputs.forEach((input) => (body[input.name] = input.value));
     try{
-        const response = await fetch(urlPayments, {
+        const response = await fetch(urlServices, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(body),
         });
-        //console.log("response",response);
-        //console.log("body",body)
+        console.log("response",response);
+        console.log("body",body)
         
         // * Validaciones
         if (response.ok){
             Swal.fire({
-                text : "¡Pago Añadido!",
+                text : "¡Servicio Añadido!",
                 icon : "success",
                 showConfirmButton: true,
             }); 
-        }else if (body.expiration_date === "dd/mm//aa"|| body.amount === ""){
+        }else if (body.service-name === ""|| body.desc === "" || body.url-image === ""){
             Swal.fire({
                 text : "¡Por favor, completa los campos!",
                 icon : "warning"
@@ -79,11 +79,6 @@ form.onsubmit = async function(event){
     
     }catch(error){
         console.log(error)
-        Swal.fire({
-            title: 'Ha ocurrido un error',
-            text: `${error}`,
-            icon : "error"
-        });
     }
 
 }
@@ -92,21 +87,6 @@ form.onsubmit = async function(event){
 function removeLocalStorage(){
     localStorage.clear();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

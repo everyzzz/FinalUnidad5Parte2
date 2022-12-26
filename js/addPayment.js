@@ -85,7 +85,7 @@ form.onsubmit = async function(event){
                 icon : "success",
                 showConfirmButton: true,
             }); 
-        }else if (body.expiration_date === "dd/mm//aa"|| body.amount === ""){
+        }else if (body.expiration_date === "dd/mm/aa" || body.amount === ""){
             Swal.fire({
                 text : "¡Por favor, completa los campos!",
                 icon : "warning"

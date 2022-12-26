@@ -160,3 +160,4 @@ getExpiredPayments()
 function removeLocalStorage(){
     localStorage.clear();
 }
+
