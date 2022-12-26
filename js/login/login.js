@@ -5,11 +5,19 @@ const urlLogin = 'http://127.0.0.1:8000/users/login/'
 //* LocalStorage ----------------------------------------------------
 let tokenStorage = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
 
+let userStorage = JSON.parse(localStorage.getItem("js.user")) ?? [];
+
+function addUser(user){
+    userStorage.push(user);
+    localStorage.setItem("js.user", JSON.stringify(userStorage));
+}
+
 function addToken(token){
     tokenStorage.push(token);
     localStorage.setItem("js.tokens", JSON.stringify(tokenStorage));
 }
-console.log(tokenStorage)
+//console.log(tokenStorage)
+
 /* Obtener una lista de tokens
 console.log(tokenStorage)
  Bucle todos los tokens
@@ -42,15 +50,23 @@ form.onsubmit = async function(event) {
         const data = await response.json();
         if (data.id){
             console.log(data); //obteniendo datos
-            const getterToken = data.tokens.access;
-            console.log(getterToken) //obteniendo token
-            addToken(getterToken)
 
-            Swal.fire({
-                text : "Logeado correctamente",
-                icon : "success",
-                showConfirmButton: true,
-            });
+            const getterUser = data.id; // obteniendo id
+            //console.log(getterUser)
+            addUser(getterUser) //añadiendo user al localstorage
+
+            const getterToken = data.tokens.access;
+            //console.log(getterToken) //obteniendo token
+            addToken(getterToken) //añadiendo user al localstorage
+
+            Swal.fire( 
+                "Logeado correctamente",
+                "","success"
+            ).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.replace('/templates/index.html')
+            }})
+    
         }else if (body.email === "" || body.password === ""){
             Swal.fire({
                 text : "Por favor, rellena todos los campos",

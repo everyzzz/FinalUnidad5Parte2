@@ -4,15 +4,51 @@
 const urlServices = 'http://127.0.0.1:8000/v2/services/'
 const urlPayments = 'http://127.0.0.1:8000/v2/payment-users/'
 const urlExpiredPayments = 'http://127.0.0.1:8000/v2/expired-payment/'
+const urlUsers = 'http://127.0.0.1:8000/users/'
 
 const containerPays = document.querySelector(".row");
 const containerExpired = document.querySelector(".two");
 
+const userDiv = document.querySelector("#user-data"); // user name
+const pageService = document.querySelector(".head1"); // admin view
+
+
+/*--------------------------- LocalStorage ----------------------------*/
 // Obteniendo Token
 let obtenerToken = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
 let lastToken = obtenerToken[obtenerToken.length - 1];
 //console.log("Último token",lastToken);
 
+// Obteniendo Usuario
+let obtenerUser = JSON.parse(localStorage.getItem("js.user")) ?? [];
+let lastUser = obtenerUser[obtenerUser.length - 1];
+//console.log("Último User",lastUser);
+/*--------------------------- Fin LocalStorage ----------------------------*/
+
+/*-----Almacenar Datos User-----*/
+let userGetData = {} // datos a mostrar
+let getUserOrAdmin = {} // datos a
+async function getUsersData(){
+    const response = await fetch(urlUsers);
+    const data = await response.json();
+    data.forEach((users)=>{
+        let id = users.id
+        let name = users.username
+        let staff = users.is_staff
+        userGetData[id]= name 
+        getUserOrAdmin[id] = staff
+    })
+    
+    // Admin Validator
+    if (getUserOrAdmin[lastUser]){
+        pageService.innerHTML += `
+        <a href="./addService.html" class="navbar-brand m-1 text-black" style="padding: 15px;">Servicios</a>
+        `
+    }
+    userDiv.innerHTML = `${userGetData[lastUser]}`//User Data
+}
+getUsersData()
+/*-----Fin almacen-----*/
 
 /*-----Almacenar logos-----*/
 let image = {} 
@@ -30,6 +66,7 @@ async function getLogoService(){
 }
 getLogoService()
 /*-----Fin almacen-----*/
+
 
 
 /*-----Almacenar datos de Pagos-----*/
@@ -53,6 +90,7 @@ getPaymentData()
 /*-----Fin almacen-----*/
 
 
+
 //* Pagos
 async function getPayments(){
     try{
@@ -63,6 +101,7 @@ async function getPayments(){
         });
         const data = await response.json();
         //console.log(data.results)
+
         data.results.forEach((pays) =>{
             containerPays.innerHTML+=`
             <div class="card col-md-auto">
@@ -93,6 +132,7 @@ async function getExpiredPayments(){
         });
         const data = await response.json();
         //console.log(data)
+
         data.results.forEach((expired)=>{
             containerExpired.innerHTML+=`
             <div class="card col-md-auto ">
@@ -116,55 +156,7 @@ async function getExpiredPayments(){
 getExpiredPayments()
 
 
-
-
-//RENDERIZADOR PAGOS
-// function renderPayments(pays){
-//     return ` 
-//     `
-// } 
-
-//RENDERIZADOR PAGOS EXPIRADOS
-// function renderExpiredPayment(expired){
-//     return `
-//     `
-// }
-
-
 //! Borrar Local Storage
 function removeLocalStorage(){
     localStorage.clear();
 }
-
-
-// //* Servicios
-// async function getServices(){
-//     try{
-//         const response = await fetch(urlServices);
-//         const data = await response.json();
-//         //console.log(data)
-//         data.forEach((service)=>{
-//             //container.innerHTML+=renderServices(service);
-//         })
-//     }catch(error){
-//         console.log(error)
-//     }
-
-// }
-// getServices()
-
-// //RENDERIZADOR SERVICIOS
-// function renderServices(service){
-//     return `
-//     <div class="card col-md-2">
-//         <div class="card-body">
-//             <h1 style="color:green">Servicios</h1>
-//             <p>${service.id}</p>
-//             <p>${service.name}</p>
-//             <p>${service.logo}</p>
-            
-//         </div>                    
-//     </div>    
-        
-//     `  
-// }

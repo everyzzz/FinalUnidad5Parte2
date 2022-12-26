@@ -7,21 +7,43 @@ const inputs = document.querySelectorAll("input");
 let selectIdUser = document.querySelector("#id-user");
 let selectIdService = document.querySelector("#id-service");
 
+const userDiv = document.querySelector("#user-data"); // user name
+const pageService = document.querySelector(".head1"); // admin view
 
 
-// * Obtener ID Usuarios
-async function getIdUser(){
-    const responseIdUser = await fetch(urlUsers);
-    const dataIdUser = await responseIdUser.json();
-    //console.log(dataIdUser)
-    for (let i = 0; i < dataIdUser.length; i++) {
-        let option = document.createElement("option");
-        option.value = dataIdUser[i].id;
-        option.text = dataIdUser[i].username;
-        selectIdUser.add(option);
-      }
+/*--------------------------- LocalStorage ----------------------------*/
+// Obteniendo Usuario
+let obtenerUser = JSON.parse(localStorage.getItem("js.user")) ?? [];
+let lastUser = obtenerUser[obtenerUser.length - 1];
+//console.log("Último User",lastUser);
+/*--------------------------- Fin LocalStorage ----------------------------*/
+
+/*-----Almacenar Datos User-----*/
+let userGetData = {} // datos a mostrar
+let getUserOrAdmin = {}
+async function getUsersData(){
+    const response = await fetch(urlUsers);
+    const data = await response.json();
+    data.forEach((users)=>{
+        let id = users.id
+        let name = users.username
+        let staff = users.is_staff
+        userGetData[id]= name 
+        getUserOrAdmin[id] = staff
+    })
+
+    // Admin Validator
+    if (getUserOrAdmin[lastUser]){
+        pageService.innerHTML += `
+        <a href="./addService.html" class="navbar-brand m-1 text-black" style="padding: 15px;">Servicios</a>
+        `
+    }
+    userDiv.innerHTML = `${userGetData[lastUser]}`//User Data
 }
-getIdUser()
+getUsersData()
+/*-----Fin almacen-----*/
+
+
 
 // * Obtener ID Servicios
 async function getIdService(){
@@ -33,17 +55,15 @@ async function getIdService(){
         option.value = dataIdService[i].id;
         option.text = dataIdService[i].name;
         selectIdService.add(option);
-      }
+    }     
 }
 getIdService()
-
-
 
 
 form.onsubmit = async function(event){
     event.preventDefault();
     const body = {
-        user_id : selectIdUser.value,
+        user_id : lastUser,
         service_id :selectIdService.value,
     };
     inputs.forEach((input) => (body[input.name] = input.value));
@@ -78,8 +98,7 @@ form.onsubmit = async function(event){
                 icon : "error"
             });
         }
-
-
+    
     }catch(error){
         console.log(error)
         Swal.fire({
