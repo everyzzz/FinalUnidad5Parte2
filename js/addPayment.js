@@ -1,6 +1,12 @@
-const urlPayments = 'http://127.0.0.1:8000/v2/payment-users/'
-const urlServices = 'http://127.0.0.1:8000/v2/services/'
-const urlUsers = 'http://127.0.0.1:8000/users/'
+/* Local */
+//const urlPayments = 'http://127.0.0.1:8000/v2/payment-users/'
+//const urlServices = 'http://127.0.0.1:8000/v2/services/'
+//const urlUsers = 'http://127.0.0.1:8000/users/'
+
+/* Railway */
+const urlPayments = 'https://finalunidad5-production.up.railway.app/v2/payment-users/'
+const urlServices = 'https://finalunidad5-production.up.railway.app/v2/services/'
+const urlUsers = 'https://finalunidad5-production.up.railway.app/users/'
 
 const form = document.querySelector("form");
 const inputs = document.querySelectorAll("input");

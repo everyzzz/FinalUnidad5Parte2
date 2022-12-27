@@ -1,5 +1,10 @@
-const urlUsers = 'http://127.0.0.1:8000/users/' // url Users
-const urlServices = 'http://127.0.0.1:8000/v2/services/' // url Services
+/* Local */
+//const urlUsers = 'http://127.0.0.1:8000/users/' // url Users
+//const urlServices = 'http://127.0.0.1:8000/v2/services/' // url Services
+
+/* Railway */
+const urlUsers = 'https://finalunidad5-production.up.railway.app/users/' // url Users
+const urlServices = 'https://finalunidad5-production.up.railway.app/v2/services/' // url Services
 
 const formAdd = document.querySelector("#add-service");
 const formEdit = document.querySelector("#edit-service");

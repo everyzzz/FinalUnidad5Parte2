@@ -1,10 +1,14 @@
-//const urlPayments = 'https://finalunidad5-production.up.railway.app/v2/payment-users/'
-//const urlExpiredPayments = 'https://finalunidad5-production.up.railway.app/v2/expired-payment/'
+/* Local */
+// const urlServices = 'http://127.0.0.1:8000/v2/services/'
+// const urlPayments = 'http://127.0.0.1:8000/v2/payment-users/'
+// const urlExpiredPayments = 'http://127.0.0.1:8000/v2/expired-payment/'
+// const urlUsers = 'http://127.0.0.1:8000/users/'
 
-const urlServices = 'http://127.0.0.1:8000/v2/services/'
-const urlPayments = 'http://127.0.0.1:8000/v2/payment-users/'
-const urlExpiredPayments = 'http://127.0.0.1:8000/v2/expired-payment/'
-const urlUsers = 'http://127.0.0.1:8000/users/'
+/* Railway */
+const urlServices = 'https://finalunidad5-production.up.railway.app/v2/services/'
+const urlPayments = 'https://finalunidad5-production.up.railway.app/v2/payment-users/'
+const urlExpiredPayments = 'https://finalunidad5-production.up.railway.app/v2/expired-payment/'
+const urlUsers = 'https://finalunidad5-production.up.railway.app/users/'
 
 const containerPays = document.querySelector(".row");
 const containerExpired = document.querySelector(".two");
@@ -126,11 +130,11 @@ async function getPayments(){
         data.results.forEach((pays) =>{
             containerPays.innerHTML+=`
             <div class="card col-md-auto">
-                <div class="card-body">
-                    <img class="rounded" src="${image[pays.service_id]}" />
-                    <p>Servicio: ${nameImg[pays.service_id]}</p>
-                    <p>Fecha de pago: ${pays.payment_date}</p>
-                    <p>Monto: ${pays.amount}</p>
+                <div class="card-body rounded text-center" style="font-size:17px">
+                    <img class="rounded" style="width: 200px" src="${image[pays.service_id]}" />
+                    <p class="mt-2"><span style="color:green">Servicio:</span> ${nameImg[pays.service_id]}</p>
+                    <p><span style="color:green">Fecha de pago:</span> ${pays.payment_date}</p>
+                    <p><span style="color:green">Monto:</span> ${pays.amount}</p>
                 </div>                    
             </div>    
             `
@@ -142,13 +146,13 @@ async function getPayments(){
         data2.results.forEach((expired)=>{
             //<p>IDpago: ${expired.payment_user_id}</p>
             containerExpired.innerHTML+=`
-            <div class="card col-md-auto ">
-                <div class="card-body rounded">
-                    <img class="rounded" src="${image[getIdPayIdUser[expired.payment_user_id]]}" />
-                    <p>Servicio: ${nameImg[getIdPayIdUser[expired.payment_user_id]]}</p>
-                    <p>Fecha de pago: ${fechaPago[expired.payment_user_id]}</p>
-                    <p>Monto: ${montoPago[expired.payment_user_id]}</p>
-                    <p>Penalidad: ${expired.penalty_free_amount}</p>
+            <div class="card col-md-auto bg-black shadow-lg">
+                <div class="card-body rounded text-center bg-alert">
+                    <img class="rounded" style="width: 200px;" src="${image[getIdPayIdUser[expired.payment_user_id]]}" />
+                    <p class="mt-2 text-white"><span class="text-danger">Servicio:</span> ${nameImg[getIdPayIdUser[expired.payment_user_id]]}</p>
+                    <p class="text-white"><span class="text-danger">Fecha de pago:</span> ${fechaPago[expired.payment_user_id]}</p>
+                    <p class="text-white"><span class="text-danger">Monto:</span> ${montoPago[expired.payment_user_id]}</p>
+                    <p class="text-white"><span class="text-danger">Penalidad:</span> ${expired.penalty_free_amount}</p>
                 </div>                    
             </div>  
             `
