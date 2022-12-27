@@ -9,8 +9,10 @@
     <style>.navbar-brand:hover{background-color: rgba(0, 0, 0, 0.171); border-radius: 10px;}</style>
     
     <script>
-        if (localStorage.length===0){
-            window.location.replace('/templates/login/login.html')   }
+        if (localStorage.length===0 || localStorage.length===1){
+            localStorage.clear()
+            window.location.replace('/templates/login/login.html')   
+        }
     </script>
 
 </head>
@@ -31,21 +33,20 @@
 
 
     <!-- PAGOS VIEW -->
-    <div class="container mt-5 ">
-        <h1>Pagos Realizados</h1>
-        <div class="row mt-5 gap-4 d-flex justify-content-center shadow-lg rounded-4">
+    <div class="container shadow-lg mt-5 p-2">
+        <h1 class="mt-5 text-center">Pagos Realizados</h1>
+        <div class="row mt-5 gap-4 d-flex justify-content-center rounded-4 mb-5">
 
         </div>
     </div>
 
     <!-- PAGOS VENCIDOS VIEW -->
-    <div class="container mt-5 ">
-        <h1>Pagos Vencidos</h1>
-        <div class="two row mt-5 gap-4 d-flex justify-content-center shadow-lg rounded-4">
+    <div class="container shadow-lg mt-5 p-2">
+        <h1 class="mt-5 text-center text-danger">Pagos Vencidos</h1>
+        <div class="two row mt-5 gap-4 d-flex justify-content-center rounded-4">
         </div>
     </div>
-
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.16/dist/sweetalert2.all.min.js"></script>
     <script src="/js/index.js"></script>
 </body> 
 </html>

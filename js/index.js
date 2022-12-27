@@ -19,6 +19,7 @@ let obtenerToken = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
 let lastToken = obtenerToken[obtenerToken.length - 1];
 //console.log("Último token",lastToken);
 
+
 // Obteniendo Usuario
 let obtenerUser = JSON.parse(localStorage.getItem("js.user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
@@ -67,8 +68,6 @@ async function getLogoService(){
 getLogoService()
 /*-----Fin almacen-----*/
 
-
-
 /*-----Almacenar datos de Pagos-----*/
 let montoPago = {}
 let fechaPago = {}
@@ -91,22 +90,43 @@ getPaymentData()
 
 
 
-//* Pagos
+//* Vistas
 async function getPayments(){
     try{
+
+        // Pays Respone
         const response = await fetch(urlPayments,{
             headers:{
                 Authorization: `Bearer ${lastToken}`
             }   
         });
-        const data = await response.json();
-        //console.log(data.results)
 
+        // Expired Pays Response
+        const response2 = await fetch(urlExpiredPayments,{
+            headers:{
+                Authorization: `Bearer ${lastToken}`
+            }
+        });
+
+        // Redirige al login
+        if (response.status === 401 || response2.status === 401 ){
+            Swal.fire( 
+                "Tu token ha vencido",
+                "Registrate nuevamente",
+                "error",
+            ).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.replace("/templates/login/login.html") 
+            }});
+            removeLocalStorage()
+        }
+
+        // Render Pays
+        const data = await response.json();
         data.results.forEach((pays) =>{
             containerPays.innerHTML+=`
             <div class="card col-md-auto">
                 <div class="card-body">
-                    <h1>Pagos</h1>
                     <img class="rounded" src="${image[pays.service_id]}" />
                     <p>Servicio: ${nameImg[pays.service_id]}</p>
                     <p>Fecha de pago: ${pays.payment_date}</p>
@@ -115,30 +135,15 @@ async function getPayments(){
             </div>    
             `
         })
-    }catch(error){
-        console.log(error)
-    }
-}
-getPayments()
-
-
-//* Pagos Expirados
-async function getExpiredPayments(){
-    try{
-        const response = await fetch(urlExpiredPayments,{
-            headers:{
-                Authorization: `Bearer ${lastToken}`
-            }
-        });
-        const data = await response.json();
-        //console.log(data)
-
-        data.results.forEach((expired)=>{
+    
+    
+        // Render Expired Pays
+        const data2 = await response2.json();
+        data2.results.forEach((expired)=>{
+            //<p>IDpago: ${expired.payment_user_id}</p>
             containerExpired.innerHTML+=`
             <div class="card col-md-auto ">
                 <div class="card-body rounded">
-                    <h1 style="color:red">Expired Pagos</h1>
-                    <p>IDpago: ${expired.payment_user_id}</p>
                     <img class="rounded" src="${image[getIdPayIdUser[expired.payment_user_id]]}" />
                     <p>Servicio: ${nameImg[getIdPayIdUser[expired.payment_user_id]]}</p>
                     <p>Fecha de pago: ${fechaPago[expired.payment_user_id]}</p>
@@ -148,12 +153,27 @@ async function getExpiredPayments(){
             </div>  
             `
         });
+
     }catch(error){
         console.log(error)
     }
-
 }
-getExpiredPayments()
+getPayments()
+
+
+// //* Pagos Expirados
+// async function getExpiredPayments(){
+//     try{
+//         !!
+//     }catch(error){
+//         console.log(error)
+//         if (error){
+//             location.reload()
+//         }
+//     }
+
+// }
+//getExpiredPayments()
 
 
 //! Borrar Local Storage

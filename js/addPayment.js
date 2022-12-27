@@ -12,6 +12,12 @@ const pageService = document.querySelector(".head1"); // admin view
 
 
 /*--------------------------- LocalStorage ----------------------------*/
+// Obteniendo Token
+let obtenerToken = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
+let lastToken = obtenerToken[obtenerToken.length - 1];
+//console.log("Último token",lastToken);
+
+
 // Obteniendo Usuario
 let obtenerUser = JSON.parse(localStorage.getItem("js.user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
@@ -49,7 +55,6 @@ getUsersData()
 async function getIdService(){
     const responseIdService = await fetch(urlServices);
     const dataIdService = await responseIdService.json();
-    //console.log(dataIdService)
     for (let i = 0; i < dataIdService.length; i++) {
         let option = document.createElement("option");
         option.value = dataIdService[i].id;
@@ -64,22 +69,32 @@ form.onsubmit = async function(event){
     event.preventDefault();
     const body = {
         user_id : lastUser,
-        service_id :selectIdService.value,
+        service_id : selectIdService.value,
     };
     inputs.forEach((input) => (body[input.name] = input.value));
     try{
         const response = await fetch(urlPayments, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${lastToken}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(body),
         });
-        //console.log("response",response);
-        //console.log("body",body)
-        
-        // * Validaciones
-        if (response.ok){
+
+       
+        if (response.status === 401){  // * Redirige al login
+            Swal.fire( 
+                "Tu token ha vencido",
+                "Registrate nuevamente",
+                "error",
+            ).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.replace("/templates/login/login.html") 
+            }});
+            removeLocalStorage()
+        }
+        else if (response.ok){ // * Validaciones
             Swal.fire({
                 text : "¡Pago Añadido!",
                 icon : "success",
@@ -101,11 +116,6 @@ form.onsubmit = async function(event){
     
     }catch(error){
         console.log(error)
-        Swal.fire({
-            title: 'Ha ocurrido un error',
-            text: `${error}`,
-            icon : "error"
-        });
     }
 
 }

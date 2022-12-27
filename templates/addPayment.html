@@ -9,8 +9,10 @@
     <style>.navbar-brand:hover{background-color: rgba(0, 0, 0, 0.171); border-radius: 10px;}</style>
 
     <script>
-        if (localStorage.length===0){
-            window.location.replace('/templates/login/login.html')   }
+        if (localStorage.length===0 || localStorage.length===1){
+            localStorage.clear()
+            window.location.replace('/templates/login/login.html')   
+        }
     </script>
 
 </head>
@@ -51,7 +53,7 @@
                     <div class="row-cols-2">
                         <label for="" class="form-label mt-2">Servicio:</label>
                         <select type="text" name="id-service" id="id-service" class="form-control mb-4">
-
+                            
                         </select>
                     </div>
                     <div class="d-grid">
