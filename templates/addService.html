@@ -66,7 +66,7 @@
     <div class="container mt-4">
         <form id="edit-service" action="" method="post" class="d-flex justify-content-center">
             <div class=" row mt-5 col-5 shadow d-flex rounded justify-content-center">
-                <h1><label for="" class="form-label m-3">Editar Servicio</label></h1>
+                <h1><label for="" class="form-label m-3">Modificar Servicio</label></h1>
                 <div class="row-cols-10 m-auto">
                     <div class="row-cols-2">
                         <label for="" class="form-label">Identificador:</label>
@@ -86,8 +86,9 @@
                         <label for="" class="form-label mt-2">Url Imagen:</label>
                         <input type="url" name="logo" id="editLogo" class="form-control" placeholder="Ingresa la Url de la imagen"></input>
                     </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-outline-dark mt-4 mb-4">Editar</button>
+                    <div class="d-flex">
+                        <button style="width: 50%;" type="submit" class="btn btn-outline-dark mt-4 mb-4">Editar</button>
+                        <a style="width: 50%;" onclick="deleteService()" class="btn btn-outline-danger mt-4 mb-4">Eliminar</a>
                     </div>
                 </div>
             </div>
@@ -115,5 +116,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.16/dist/sweetalert2.all.min.js"></script>
     <script src="/js/addService.js"></script>
+
+    <script src="/js/deleteService.js"></script>
 </body>
 </html>

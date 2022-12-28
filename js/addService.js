@@ -188,10 +188,11 @@ formEdit.onsubmit = async function(event){
                 "success",
                 ).then((result)=>{
                     if(result.isConfirmed){
-                        location.reload()
+                        location.reload();
                     }
                 })
-        }else if (body.service-name === ""|| body.description === "" || body.logo === ""){
+        }
+        else if (body.service-name === ""|| body.description === "" || body.logo === ""){
             Swal.fire({
                 text : "¡Por favor, completa los campos!",
                 icon : "warning"
@@ -210,6 +211,9 @@ formEdit.onsubmit = async function(event){
     }
 
 }
+
+
+
 
 const viewService = document.querySelector(".services-list")
 //* MOSTRAR Servicios
