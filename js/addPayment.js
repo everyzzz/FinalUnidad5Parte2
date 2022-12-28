@@ -16,16 +16,14 @@ let selectIdService = document.querySelector("#id-service");
 const userDiv = document.querySelector("#user-data"); // user name
 const pageService = document.querySelector(".head1"); // admin view
 
-
 /*--------------------------- LocalStorage ----------------------------*/
 // Obteniendo Token
-let obtenerToken = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
+let obtenerToken = JSON.parse(localStorage.getItem("tokens")) ?? [];
 let lastToken = obtenerToken[obtenerToken.length - 1];
 //console.log("Último token",lastToken);
 
-
 // Obteniendo Usuario
-let obtenerUser = JSON.parse(localStorage.getItem("js.user")) ?? [];
+let obtenerUser = JSON.parse(localStorage.getItem("user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
 //console.log("Último User",lastUser);
 /*--------------------------- Fin LocalStorage ----------------------------*/
@@ -55,8 +53,6 @@ async function getUsersData(){
 getUsersData()
 /*-----Fin almacen-----*/
 
-
-
 // * Obtener ID Servicios
 async function getIdService(){
     const responseIdService = await fetch(urlServices);
@@ -69,7 +65,6 @@ async function getIdService(){
     }     
 }
 getIdService()
-
 
 form.onsubmit = async function(event){
     event.preventDefault();
@@ -88,7 +83,6 @@ form.onsubmit = async function(event){
             body: JSON.stringify(body),
         });
 
-       
         if (response.status === 401){  // * Redirige al login
             Swal.fire( 
                 "Tu token ha vencido",
@@ -97,7 +91,10 @@ form.onsubmit = async function(event){
             ).then((result)=>{
                 if(result.isConfirmed){
                     window.location.replace("/templates/login/login.html") 
-            }});
+                }else{
+                    window.location.replace("/templates/login/login.html") 
+                }
+            });
             removeLocalStorage()
         }
         else if (response.ok){ // * Validaciones

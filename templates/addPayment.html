@@ -9,10 +9,16 @@
     <style>.navbar-brand:hover{background-color: rgba(0, 0, 0, 0.171); border-radius: 10px;}</style>
 
     <script>
-        if (localStorage.length===0 || localStorage.length===1){
+        if (localStorage.tokens && localStorage.user){
+    
+        }else{
             localStorage.clear()
             window.location.replace('/templates/login/login.html')   
         }
+        // if (localStorage.length===0 || localStorage.length===1){
+        //     localStorage.clear()
+        //     window.location.replace('/templates/login/login.html')   
+        // }
     </script>
 
 </head>
@@ -29,8 +35,6 @@
             <a href="./login/login.html" onclick="removeLocalStorage()" class="navbar-text m-1 text-black text-center ">Cerrar Sesión</a>
         </div>
     </nav>
-
-
     <div class="container mt-4">
         <form action="" method="post" class="d-flex justify-content-center">
             <div class=" row mt-5 col-5 shadow d-flex justify-content-center">

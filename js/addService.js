@@ -30,7 +30,6 @@ async function getIdService(){
         option.text = dataIdService[i].id;
         selectIdService.add(option);
     }     
-    inputsEditName.forEach((input) => (input.value="sd"));
 }
 getIdService()
 
@@ -51,13 +50,13 @@ getDataServicio()
 
 /*--------------------------- LocalStorage ----------------------------*/
 // Obteniendo Token
-let obtenerToken = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
+let obtenerToken = JSON.parse(localStorage.getItem("tokens")) ?? [];
 let lastToken = obtenerToken[obtenerToken.length - 1];
 //console.log("Último token",lastToken);
 
 
 // Obteniendo Usuario
-let obtenerUser = JSON.parse(localStorage.getItem("js.user")) ?? [];
+let obtenerUser = JSON.parse(localStorage.getItem("user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
 //console.log("Último User",lastUser);
 /*--------------------------- Fin LocalStorage ----------------------------*/
@@ -65,7 +64,7 @@ let lastUser = obtenerUser[obtenerUser.length - 1];
 
 /*-----Almacenar Datos User-----*/
 let userGetData = {} // datos a mostrar
-let getUserOrAdmin = {} // datos a
+let getUserOrAdmin = {} // datos admin
 async function getUsersData(){
     const response = await fetch(urlUsers);
     const data = await response.json();
@@ -164,9 +163,10 @@ formEdit.onsubmit = async function(event){
             },
             body: JSON.stringify(body),
         });
-        console.log(body)
-        console.log(response)
-        
+        // console.log(body)
+        // console.log(response)
+
+
         if (response.status === 401){ // * Redirige al login
             Swal.fire( 
                 "Tu token ha vencido",
@@ -175,7 +175,10 @@ formEdit.onsubmit = async function(event){
             ).then((result)=>{
                 if(result.isConfirmed){
                     window.location.replace("/templates/login/login.html") 
-            }});
+                }else{
+                    window.location.replace("/templates/login/login.html") 
+                }
+            });
             removeLocalStorage()
         }
         else if (response.ok){ // * Validaciones
@@ -208,30 +211,46 @@ formEdit.onsubmit = async function(event){
 
 }
 
-//! Borrar Local Storage
-function removeLocalStorage(){
-    localStorage.clear();
-}
-
-
-
-const cont = document.querySelector(".services-list")
+const viewService = document.querySelector(".services-list")
 //* MOSTRAR Servicios
 async function getServices(){
     try{
-        const response = await fetch(urlServices);
+
+        // Service Response
+        const response = await fetch(urlServices,{
+            headers:{
+                Authorization: `Bearer ${lastToken}`
+            }   
+        });
+
+        // Redirige al login
+        if (response.status === 401){
+            Swal.fire( 
+                "Tu token ha vencido",
+                "Registrate nuevamente",
+                "error",
+            ).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.replace("/templates/login/login.html") 
+                }else{
+                    window.location.replace("/templates/login/login.html") 
+                }
+            });
+            removeLocalStorage()
+        }
+
+        // Render Services
         const data = await response.json();
-        //console.log(data)
         data.forEach((service)=>{
-            cont.innerHTML+=`
-            <div class="card">
-                <div class="card-body">
-                    <h1 style="color:green">${service.name}</h1>
-                    <p>Identificador: ${service.id}</p>
-                    <img src="${service.logo}" style="width: 150px; height:auto;"/>     
-                </div>                    
-            </div>    
+            viewService.innerHTML+=`
+                    <tr class="text-center">
+                        <td id="delete-service-id">${service.id}</td>
+                        <td>${service.name}</td>
+                        <td>${service.description}</td>
+                        <td><img class="rounded" src="${service.logo}" style="width: 100px; height:auto;"/></td>
+                    </tr>
             ` ;
+
         })
     }catch(error){
         console.log(error)
@@ -240,3 +259,7 @@ async function getServices(){
 }
 getServices()
 
+//! Borrar Local Storage
+function removeLocalStorage(){
+    localStorage.clear();
+}

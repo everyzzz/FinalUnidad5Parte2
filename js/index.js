@@ -19,13 +19,13 @@ const pageService = document.querySelector(".head1"); // admin view
 
 /*--------------------------- LocalStorage ----------------------------*/
 // Obteniendo Token
-let obtenerToken = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
+let obtenerToken = JSON.parse(localStorage.getItem("tokens")) ?? [];
 let lastToken = obtenerToken[obtenerToken.length - 1];
 //console.log("Último token",lastToken);
 
 
 // Obteniendo Usuario
-let obtenerUser = JSON.parse(localStorage.getItem("js.user")) ?? [];
+let obtenerUser = JSON.parse(localStorage.getItem("user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
 //console.log("Último User",lastUser);
 /*--------------------------- Fin LocalStorage ----------------------------*/
@@ -43,7 +43,6 @@ async function getUsersData(){
         userGetData[id]= name 
         getUserOrAdmin[id] = staff
     })
-    
     // Admin Validator
     if (getUserOrAdmin[lastUser]){
         pageService.innerHTML += `
@@ -92,13 +91,11 @@ async function getPaymentData(){
 getPaymentData()
 /*-----Fin almacen-----*/
 
-
-
 //* Vistas
 async function getPayments(){
     try{
 
-        // Pays Respone
+        // Pays Response
         const response = await fetch(urlPayments,{
             headers:{
                 Authorization: `Bearer ${lastToken}`
@@ -121,7 +118,10 @@ async function getPayments(){
             ).then((result)=>{
                 if(result.isConfirmed){
                     window.location.replace("/templates/login/login.html") 
-            }});
+                }else{
+                    window.location.replace("/templates/login/login.html") 
+                }
+            });
             removeLocalStorage()
         }
 
@@ -139,8 +139,7 @@ async function getPayments(){
             </div>    
             `
         })
-    
-    
+        
         // Render Expired Pays
         const data2 = await response2.json();
         data2.results.forEach((expired)=>{
@@ -165,23 +164,7 @@ async function getPayments(){
 getPayments()
 
 
-// //* Pagos Expirados
-// async function getExpiredPayments(){
-//     try{
-//         !!
-//     }catch(error){
-//         console.log(error)
-//         if (error){
-//             location.reload()
-//         }
-//     }
-
-// }
-//getExpiredPayments()
-
-
 //! Borrar Local Storage
 function removeLocalStorage(){
     localStorage.clear();
 }
-

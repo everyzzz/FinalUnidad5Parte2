@@ -9,10 +9,16 @@
     <style>.navbar-brand:hover{background-color: rgba(0, 0, 0, 0.171); border-radius: 10px;}</style>
     
     <script>
-        if (localStorage.length===0 || localStorage.length===1){
+        if (localStorage.tokens && localStorage.user){
+    
+        }else{
             localStorage.clear()
             window.location.replace('/templates/login/login.html')   
         }
+        // if (localStorage.length===0 || localStorage.length===1){
+        //     localStorage.clear()
+        //     window.location.replace('/templates/login/login.html')   
+        // }
     </script>
 
 </head>

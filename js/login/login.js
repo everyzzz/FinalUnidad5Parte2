@@ -6,18 +6,18 @@ const urlLogin = 'https://finalunidad5-production.up.railway.app/users/login/'
 
 
 //* LocalStorage ----------------------------------------------------
-let tokenStorage = JSON.parse(localStorage.getItem("js.tokens")) ?? [];
+let tokenStorage = JSON.parse(localStorage.getItem("tokens")) ?? [];
 
-let userStorage = JSON.parse(localStorage.getItem("js.user")) ?? [];
+let userStorage = JSON.parse(localStorage.getItem("user")) ?? [];
 
 function addUser(user){
     userStorage.push(user);
-    localStorage.setItem("js.user", JSON.stringify(userStorage));
+    localStorage.setItem("user", JSON.stringify(userStorage));
 }
 
 function addToken(token){
     tokenStorage.push(token);
-    localStorage.setItem("js.tokens", JSON.stringify(tokenStorage));
+    localStorage.setItem("tokens", JSON.stringify(tokenStorage));
 }
 //console.log(tokenStorage)
 
@@ -27,9 +27,6 @@ console.log(tokenStorage)
 tokenStorage.forEach((token)=>{
     console.log(token)
 }); */
-
-
-
 const form = document.querySelector("form");
 const inputs = document.querySelectorAll("input");
 
@@ -47,19 +44,15 @@ form.onsubmit = async function(event) {
             body: JSON.stringify(body), 
             
         });
-        //console.log(body)
-        //console.log(response)
 
-        const data = await response.json();
+        const data = await response.json(); //obteniendo datos
         if (data.id){
-            console.log(data); //obteniendo datos
+            //console.log(data); 
 
             const getterUser = data.id; // obteniendo id
-            //console.log(getterUser)
             addUser(getterUser) //añadiendo user al localstorage
 
             const getterToken = data.tokens.access;
-            //console.log(getterToken) //obteniendo token
             addToken(getterToken) //añadiendo user al localstorage
 
             Swal.fire( 
