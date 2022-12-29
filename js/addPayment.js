@@ -16,6 +16,8 @@ let selectIdService = document.querySelector("#id-service");
 const userDiv = document.querySelector("#user-data"); // user name
 const pageService = document.querySelector(".head1"); // admin view
 
+const imgDiv = document.querySelector("#img-url"); // img view
+
 /*--------------------------- LocalStorage ----------------------------*/
 // Obteniendo Token
 let obtenerToken = JSON.parse(localStorage.getItem("tokens")) ?? [];
@@ -26,6 +28,10 @@ let lastToken = obtenerToken[obtenerToken.length - 1];
 let obtenerUser = JSON.parse(localStorage.getItem("user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
 //console.log("Último User",lastUser);
+
+// Obteniendo la url de la imagen
+let obtenerImg = JSON.parse(localStorage.getItem("img")) ?? [];
+let lastImg = obtenerImg[obtenerImg.length -1];
 /*--------------------------- Fin LocalStorage ----------------------------*/
 
 /*-----Almacenar Datos User-----*/
@@ -48,7 +54,12 @@ async function getUsersData(){
         <a href="./addService.html" class="navbar-brand m-1 text-black" style="padding: 15px;">Servicios</a>
         `
     }
-    userDiv.innerHTML = `${userGetData[lastUser]}`//User Data
+    if (lastImg !== "") {
+        imgDiv.innerHTML = `<img src="${lastImg}" style="width: 80px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
+    } else {
+        imgDiv.innerHTML = `<img src="https://img.freepik.com/foto-gratis/disparo-gran-angular-solo-arbol-que-crece-cielo-nublado-puesta-sol-rodeada-cesped_181624-22807.jpg?w=2000" style="width: 100px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
+    }
+    userDiv.innerHTML = `<small class="text-muted"><em>${userGetData[lastUser]} </em></small>`//User Data
 }
 getUsersData()
 /*-----Fin almacen-----*/

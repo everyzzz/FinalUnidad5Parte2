@@ -17,6 +17,7 @@ const inputsEditDesc = document.querySelectorAll("#editDesc");
 const inputsEditLogo = document.querySelectorAll("#editLogo");
 const userDiv = document.querySelector("#user-data"); // user name
 const pageService = document.querySelector(".head1"); // admin view
+const imgDiv = document.querySelector("#img-url"); // img view
 
 let selectIdService = document.querySelector("#service-option"); //service id
 
@@ -59,6 +60,11 @@ let lastToken = obtenerToken[obtenerToken.length - 1];
 let obtenerUser = JSON.parse(localStorage.getItem("user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
 //console.log("Último User",lastUser);
+
+// Obteniendo la url de la imagen
+let obtenerImg = JSON.parse(localStorage.getItem("img")) ?? [];
+let lastImg = obtenerImg[obtenerImg.length -1];
+
 /*--------------------------- Fin LocalStorage ----------------------------*/
 
 
@@ -83,7 +89,12 @@ async function getUsersData(){
     }else{
         window.location.replace("/templates/index.html") 
     }
-    userDiv.innerHTML += `${userGetData[lastUser]}`//User Data    
+    if (lastImg !== "") {
+        imgDiv.innerHTML = `<img src="${lastImg}" style="width: 80px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
+    } else {
+        imgDiv.innerHTML = `<img src="https://img.freepik.com/foto-gratis/disparo-gran-angular-solo-arbol-que-crece-cielo-nublado-puesta-sol-rodeada-cesped_181624-22807.jpg?w=2000" style="width: 100px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
+    }
+    userDiv.innerHTML += `<small class="text-muted"><em>${userGetData[lastUser]} </em></small>`//User Data 
 }
 getUsersData()
 /*-----Fin almacen-----*/

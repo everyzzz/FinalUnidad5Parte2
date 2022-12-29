@@ -10,6 +10,8 @@ let tokenStorage = JSON.parse(localStorage.getItem("tokens")) ?? [];
 
 let userStorage = JSON.parse(localStorage.getItem("user")) ?? [];
 
+let imgStorage = JSON.parse(localStorage.getItem("img")) ?? []; // para recibir url de imagenes
+
 function addUser(user){
     userStorage.push(user);
     localStorage.setItem("user", JSON.stringify(userStorage));
@@ -19,6 +21,13 @@ function addToken(token){
     tokenStorage.push(token);
     localStorage.setItem("tokens", JSON.stringify(tokenStorage));
 }
+
+/* Agregar la url en el local */
+function addImg(img) {
+    imgStorage.push(img)
+    localStorage.setItem("img", JSON.stringify(imgStorage));
+}
+
 //console.log(tokenStorage)
 
 /* Obtener una lista de tokens
@@ -44,6 +53,9 @@ form.onsubmit = async function(event) {
             body: JSON.stringify(body), 
             
         });
+        
+        const getterImg = body.url;  // Enviamos el url al local
+        addImg(getterImg)
 
         const data = await response.json(); //obteniendo datos
         if (data.id){
@@ -53,7 +65,7 @@ form.onsubmit = async function(event) {
             addUser(getterUser) //añadiendo user al localstorage
 
             const getterToken = data.tokens.access;
-            addToken(getterToken) //añadiendo user al localstorage
+            addToken(getterToken) //añadiendo token al localstorage
 
             Swal.fire( 
                 "Logeado correctamente",
