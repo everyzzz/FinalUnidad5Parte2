@@ -6,27 +6,27 @@ const urlLogin = 'https://finalunidad5-production.up.railway.app/users/login/'
 
 
 //* LocalStorage ----------------------------------------------------
-let tokenStorage = JSON.parse(localStorage.getItem("tokens")) ?? [];
 
-let userStorage = JSON.parse(localStorage.getItem("user")) ?? [];
-
-function addUser(user){
+let userStorage = JSON.parse(localStorage.getItem("user")) ?? []; // Obtiene User
+function addUser(user){ // agrega user en localStorage
     userStorage.push(user);
     localStorage.setItem("user", JSON.stringify(userStorage));
 }
 
-function addToken(token){
+let tokenStorage = JSON.parse(localStorage.getItem("tokens")) ?? []; // Obtiene Token
+function addToken(token){ // agrega token en localStorage
     tokenStorage.push(token);
     localStorage.setItem("tokens", JSON.stringify(tokenStorage));
 }
-//console.log(tokenStorage)
 
-/* Obtener una lista de tokens
-console.log(tokenStorage)
- Bucle todos los tokens
-tokenStorage.forEach((token)=>{
-    console.log(token)
-}); */
+let imgStorage = JSON.parse(localStorage.getItem("img")) ?? []; // Obtiene Url de imagenes
+function addImg(img) { // agrega imagen en localStorage
+    imgStorage.push(img)
+    localStorage.setItem("img", JSON.stringify(imgStorage));
+}
+// Fin LocalStorage ----------------------------------------------------
+
+
 const form = document.querySelector("form");
 const inputs = document.querySelectorAll("input");
 
@@ -44,6 +44,10 @@ form.onsubmit = async function(event) {
             body: JSON.stringify(body), 
             
         });
+        console.log(body)
+        const getterImg = body.url;  // Enviamos el url al local
+        console.log(body.url)
+        addImg(getterImg)
 
         const data = await response.json(); //obteniendo datos
         if (data.id){

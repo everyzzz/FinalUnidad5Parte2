@@ -17,17 +17,41 @@ const userDiv = document.querySelector("#user-data"); // user name
 const pageService = document.querySelector(".head1"); // admin view
 
 
+const imgDiv = document.querySelector("#img-url"); // img view
+// Almacenamos la ubicación de los botones que ocultan pagos vigentes y vencidos
+let btnPay = document.querySelector("#boton-ocultar-payments") // identificar el boton ocultar
+let btnExp = document.querySelector("#boton-ocultar-expirets") // identificar el boton ocultar
+
+
 /*--------------------------- LocalStorage ----------------------------*/
+//Para almacenar el total de payments y expired. Y las funciones para agregar al local
+//Nota: Estos datos se almacenan en el local para usarlos en la paginación
+
+let numPaymentsStorage = JSON.parse(localStorage.getItem("numPayments")) ?? [];
+function addNumPayments(numPay) {
+    numPaymentsStorage.push(numPay);
+    localStorage.setItem("numPayments", JSON.stringify(numPaymentsStorage))
+}
+
+let numExpiretsStorage = JSON.parse(localStorage.getItem("numExpirets")) ?? [];
+function addNumExpirets(numExp) {
+    numExpiretsStorage.push(numExp);
+    localStorage.setItem("numExpirets", JSON.stringify(numExpiretsStorage))
+}
+
+
+// Obteniendo la url de la imagen
+let obtenerImg = JSON.parse(localStorage.getItem("img")) ?? [];
+let lastImg = obtenerImg[obtenerImg.length -1];
+
+
 // Obteniendo Token
 let obtenerToken = JSON.parse(localStorage.getItem("tokens")) ?? [];
 let lastToken = obtenerToken[obtenerToken.length - 1];
-//console.log("Último token",lastToken);
-
 
 // Obteniendo Usuario
 let obtenerUser = JSON.parse(localStorage.getItem("user")) ?? [];
 let lastUser = obtenerUser[obtenerUser.length - 1];
-//console.log("Último User",lastUser);
 /*--------------------------- Fin LocalStorage ----------------------------*/
 
 /*-----Almacenar Datos User-----*/
@@ -49,7 +73,15 @@ async function getUsersData(){
         <a href="./addService.html" class="navbar-brand m-1 text-black" style="padding: 15px;">Servicios</a>
         `
     }
-    userDiv.innerHTML = `${userGetData[lastUser]}`//User Data
+
+    // Pintamos la imagen del usuario, de paso, le damos estilos al nombre del usuario
+    if (lastImg !== "") {
+        imgDiv.innerHTML = `<img src="${lastImg}" style="width: 80px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
+    } else {
+        imgDiv.innerHTML = `<img src="https://img.freepik.com/foto-gratis/disparo-gran-angular-solo-arbol-que-crece-cielo-nublado-puesta-sol-rodeada-cesped_181624-22807.jpg?w=2000" style="width: 100px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
+    }
+    
+    userDiv.innerHTML = `<span style="font-family: Tahoma; text-transform: capitalize; text-size:25px"><b>${userGetData[lastUser]}</b></span>`//User Data
 }
 getUsersData()
 /*-----Fin almacen-----*/
@@ -127,9 +159,10 @@ async function getPayments(){
 
         // Render Pays
         const data = await response.json();
-        data.results.forEach((pays) =>{
+        addNumPayments(data.count)  // Agregamos en el local el total de datos
+        data.results.forEach((pays, index) =>{
             containerPays.innerHTML+=`
-            <div class="card col-md-auto">
+            <div id="payment-${index}" class="payment card col-md-auto">
                 <div class="card-body rounded text-center" style="font-size:17px">
                     <img class="rounded" style="width: 200px" src="${image[pays.service_id]}" />
                     <p class="mt-2"><span style="color:green">Servicio:</span> ${nameImg[pays.service_id]}</p>
@@ -140,12 +173,20 @@ async function getPayments(){
             `
         })
         
+        
+        // al refrescar la pagina, damos click al boton ver menos...
+          setTimeout(()=>{
+            btnPay.click();
+        }, );
+        
+
         // Render Expired Pays
         const data2 = await response2.json();
-        data2.results.forEach((expired)=>{
+        addNumExpirets(data2.count) // Agregamos en el local el total de datos
+        data2.results.forEach((expired, index)=>{
             //<p>IDpago: ${expired.payment_user_id}</p>
             containerExpired.innerHTML+=`
-            <div class="card col-md-auto bg-black shadow-lg">
+            <div id="expired-${index}" class="card col-md-auto bg-black shadow-lg">
                 <div class="card-body rounded text-center bg-alert">
                     <img class="rounded" style="width: 200px;" src="${image[getIdPayIdUser[expired.payment_user_id]]}" />
                     <p class="mt-2 text-white"><span class="text-danger">Servicio:</span> ${nameImg[getIdPayIdUser[expired.payment_user_id]]}</p>
@@ -156,6 +197,11 @@ async function getPayments(){
             </div>  
             `
         });
+
+         // al refrescar la pagina, damos click al boton ver menos...
+         setTimeout(()=>{
+            btnExp.click();
+        }, );
 
     }catch(error){
         console.log(error)
