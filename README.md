@@ -55,3 +55,9 @@ Cada item a continuación tiene una puntuación de 4 puntos:
     - Uso de JWT en el login y obtención de datos - del backend.
     - Uso de funciones asíncronas.
     - Implementación del CRUD.
+
+
+## Integrantes
+
+- José Quispe Reyes
+- Jelsin Palomino
