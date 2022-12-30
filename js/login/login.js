@@ -64,8 +64,11 @@ form.onsubmit = async function(event) {
                 "","success"
             ).then((result)=>{
                 if(result.isConfirmed){
+                        window.location.replace('/templates/index.html')
+                }else{
                     window.location.replace('/templates/index.html')
-            }})
+                }
+            });
     
         }else if (body.email === "" || body.password === ""){
             Swal.fire({
