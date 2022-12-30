@@ -30,8 +30,10 @@ form.onsubmit = async function(event){
             ).then((result)=>{
                 if(result.isConfirmed){
                     window.location.replace('/templates/login/login.html')
-            }})
-
+                }else{
+                    window.location.replace('/templates/login/login.html')
+                }
+            });
         }else if (body.email === "" || body.username === ""|| body.password === ""){
             Swal.fire({
                 text : "¡Por favor, llena todos los campos!",

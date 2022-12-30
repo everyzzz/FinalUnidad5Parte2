@@ -61,3 +61,17 @@ Cada item a continuación tiene una puntuación de 4 puntos:
 
 - José Quispe Reyes
 - Jelsin Palomino
+
+## Despliegue
+
+https://frontendsilabuz.netlify.app/templates/login/login.html
+
+## Credenciales
+
+Admin:
+- email: jose@gmail.com
+- password : adminadmin
+
+User:
+- email: user@gmail.com
+- password : useruser

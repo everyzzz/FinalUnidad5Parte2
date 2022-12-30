@@ -35,8 +35,9 @@ async function deleteService() {
                 `Eliminaste a ${getNameServices[id]}`,
                 "success"
               ).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
+                    location.reload();
+                }else{
                     location.reload();
                 }
               });

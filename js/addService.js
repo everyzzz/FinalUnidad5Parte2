@@ -121,7 +121,10 @@ formAdd.onsubmit = async function(event){
             ).then((result)=>{
                 if(result.isConfirmed){
                     window.location.replace("/templates/login/login.html") 
-            }});
+                }else{
+                    window.location.replace("/templates/login/login.html") 
+                }
+            });
             removeLocalStorage()
         }
         else if (response.ok){ // * Validaciones
@@ -131,9 +134,11 @@ formAdd.onsubmit = async function(event){
                 "success",
                 ).then((result)=>{
                     if(result.isConfirmed){
-                        location.reload()
-                    }
-                })
+                        location.reload();
+                    }else{
+                        location.reload();
+                    }   
+                });
         }else if (body.service-name === ""|| body.description === "" || body.logo === ""){
             Swal.fire({
                 text : "¡Por favor, completa los campos!",
@@ -199,8 +204,10 @@ formEdit.onsubmit = async function(event){
                 ).then((result)=>{
                     if(result.isConfirmed){
                         location.reload();
+                    }else{
+                        location.reload();
                     }
-                })
+                });
         }
         else if (body.service-name === ""|| body.description === "" || body.logo === ""){
             Swal.fire({
@@ -221,9 +228,6 @@ formEdit.onsubmit = async function(event){
     }
 
 }
-
-
-
 
 const viewService = document.querySelector(".services-list")
 //* MOSTRAR Servicios
