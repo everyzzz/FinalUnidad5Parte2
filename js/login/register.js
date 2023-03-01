@@ -1,8 +1,8 @@
 /* Local */
-//const urlRegister = 'http://127.0.0.1:8000/users/signup/'
+const urlRegister = 'http://127.0.0.1:8000/users/signup/'
 
 /* Railway */
-const urlRegister = 'https://finalunidad5-production.up.railway.app/users/signup/'
+// const urlRegister = 'https://finalunidad5-production.up.railway.app/users/signup/'
 
 const form = document.querySelector("form");
 const inputs = document.querySelectorAll("input");

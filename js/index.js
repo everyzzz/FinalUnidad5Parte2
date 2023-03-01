@@ -1,14 +1,4 @@
-/* Local */
-// const urlServices = 'http://127.0.0.1:8000/v2/services/'
-// const urlPayments = 'http://127.0.0.1:8000/v2/payment-users/'
-// const urlExpiredPayments = 'http://127.0.0.1:8000/v2/expired-payment/'
-// const urlUsers = 'http://127.0.0.1:8000/users/'
-
-/* Railway */
-const urlServices = 'https://finalunidad5-production.up.railway.app/v2/services/'
-const urlPayments = 'https://finalunidad5-production.up.railway.app/v2/payment-users/'
-const urlExpiredPayments = 'https://finalunidad5-production.up.railway.app/v2/expired-payment/'
-const urlUsers = 'https://finalunidad5-production.up.railway.app/users/'
+import { urlExpiredPayments,urlPayments,urlUsers,urlServices } from "./utils/urls.js";
 
 const containerPays = document.querySelector(".row");
 const containerExpired = document.querySelector(".two");
@@ -17,7 +7,7 @@ const userDiv = document.querySelector("#user-data"); // user name
 const pageService = document.querySelector(".head1"); // admin view
 
 
-const imgDiv = document.querySelector("#img-url"); // img view
+const imgDiv = document.querySelector("#img-profile"); // img view
 // Almacenamos la ubicación de los botones que ocultan pagos vigentes y vencidos
 let btnPay = document.querySelector("#boton-ocultar-payments") // identificar el boton ocultar
 let btnExp = document.querySelector("#boton-ocultar-expirets") // identificar el boton ocultar
@@ -56,7 +46,7 @@ let lastUser = obtenerUser[obtenerUser.length - 1];
 
 /*-----Almacenar Datos User-----*/
 let userGetData = {} // datos a mostrar
-let getUserOrAdmin = {} // datos a
+export let getUserOrAdmin = {} // datos a
 async function getUsersData(){
     const response = await fetch(urlUsers);
     const data = await response.json();
@@ -75,12 +65,8 @@ async function getUsersData(){
     }
 
     // Pintamos la imagen del usuario, de paso, le damos estilos al nombre del usuario
-    if (lastImg !== "") {
-        imgDiv.innerHTML = `<img src="${lastImg}" style="width: 80px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
-    } else {
-        imgDiv.innerHTML = `<img src="https://img.freepik.com/foto-gratis/disparo-gran-angular-solo-arbol-que-crece-cielo-nublado-puesta-sol-rodeada-cesped_181624-22807.jpg?w=2000" style="width: 100px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
-    }
-    
+    imgDiv.innerHTML = `<img style="width: 25%; background: #E0E0E0; border-radius:50%" src="https://avatars.dicebear.com/api/avataaars/${userGetData[lastUser]}15.svg"/>`
+
     userDiv.innerHTML = `<span style="font-family: Tahoma; text-transform: capitalize; text-size:25px"><b>${userGetData[lastUser]}</b></span>`//User Data
 }
 getUsersData()
@@ -167,7 +153,7 @@ async function getPayments(){
                     <img class="rounded" style="width: 200px" src="${image[pays.service_id]}" />
                     <p class="mt-2"><span style="color:green">Servicio:</span> ${nameImg[pays.service_id]}</p>
                     <p><span style="color:green">Fecha de pago:</span> ${pays.payment_date}</p>
-                    <p><span style="color:green">Monto:</span> ${pays.amount}</p>
+                    <p><span style="color:green">Monto:</span> S/.${pays.amount}</p>
                 </div>                    
             </div>    
             `
@@ -191,8 +177,8 @@ async function getPayments(){
                     <img class="rounded" style="width: 200px;" src="${image[getIdPayIdUser[expired.payment_user_id]]}" />
                     <p class="mt-2 text-white"><span class="text-danger">Servicio:</span> ${nameImg[getIdPayIdUser[expired.payment_user_id]]}</p>
                     <p class="text-white"><span class="text-danger">Fecha de pago:</span> ${fechaPago[expired.payment_user_id]}</p>
-                    <p class="text-white"><span class="text-danger">Monto:</span> ${montoPago[expired.payment_user_id]}</p>
-                    <p class="text-white"><span class="text-danger">Penalidad:</span> ${expired.penalty_free_amount}</p>
+                    <p class="text-white"><span class="text-danger">Monto:</span> S/.${montoPago[expired.payment_user_id]}</p>
+                    <p class="text-white"><span class="text-danger">Penalidad:</span> S/.${expired.penalty_free_amount}</p>
                 </div>                    
             </div>  
             `

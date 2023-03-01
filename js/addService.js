@@ -1,10 +1,5 @@
 /* Local */
-//const urlUsers = 'http://127.0.0.1:8000/users/' // url Users
-//const urlServices = 'http://127.0.0.1:8000/v2/services/' // url Services
-
-/* Railway */
-const urlUsers = 'https://finalunidad5-production.up.railway.app/users/' // url Users
-const urlServices = 'https://finalunidad5-production.up.railway.app/v2/services/' // url Services
+import { urlServices, urlUsers } from "./utils/urls.js";
 
 const formAdd = document.querySelector("#add-service");
 const formEdit = document.querySelector("#edit-service");
@@ -16,14 +11,13 @@ const inputsEditName = document.querySelectorAll("#editName");
 const inputsEditDesc = document.querySelectorAll("#editDesc");
 const inputsEditLogo = document.querySelectorAll("#editLogo");
 const userDiv = document.querySelector("#user-data"); // user name
-const pageService = document.querySelector(".head1"); // admin view
 
-const imgDiv = document.querySelector("#img-url"); // img view
+const imgDiv = document.querySelector("#img-profile"); // img view
 
 let selectIdService = document.querySelector("#service-option"); //service id
 
 // * Obtener Data Service
-async function getIdService(){
+async function getIdService() {
     const responseIdService = await fetch(urlServices);
     const dataIdService = await responseIdService.json();
     for (let i = 0; i < dataIdService.length; i++) {
@@ -31,24 +25,25 @@ async function getIdService(){
         option.value = dataIdService[i].id;
         option.text = dataIdService[i].id;
         selectIdService.add(option);
-    }     
+    }
 }
 getIdService()
 
 // Mostrar datos de forma automática
-async function getDataServicio(){
+async function getDataServicio() {
     const responseIdService = await fetch(urlServices);
     const data = await responseIdService.json();
-    data.forEach((data)=>{
-        if (selectIdService.value == data.id){
-            inputsEditName.forEach((input) => (input.value=data.name));
-            inputsEditDesc.forEach((input) => (input.value=data.description));
-            inputsEditLogo.forEach((input) => (input.value=data.logo));
+    data.forEach((data) => {
+        if (selectIdService.value == data.id) {
+            inputsEditName.forEach((input) => (input.value = data.name));
+            inputsEditDesc.forEach((input) => (input.value = data.description));
+            inputsEditLogo.forEach((input) => (input.value = data.logo));
         }
-    })
+    });
+
 }
 getDataServicio()
-
+window.getDataServicio = getDataServicio;
 
 /*--------------------------- LocalStorage ----------------------------*/
 // Obteniendo Token
@@ -61,37 +56,23 @@ let lastUser = obtenerUser[obtenerUser.length - 1];
 
 // Obteniendo la url de la imagen
 let obtenerImg = JSON.parse(localStorage.getItem("img")) ?? [];
-let lastImg = obtenerImg[obtenerImg.length -1];
+let lastImg = obtenerImg[obtenerImg.length - 1];
 /*--------------------------- Fin LocalStorage ----------------------------*/
 
 
 /*-----Almacenar Datos User-----*/
 let userGetData = {} // datos a mostrar
-let getUserOrAdmin = {} // datos admin
-async function getUsersData(){
+async function getUsersData() {
     const response = await fetch(urlUsers);
     const data = await response.json();
-    data.forEach((users)=>{
+    data.forEach((users) => {
         let id = users.id
         let name = users.username
-        let staff = users.is_staff
-        userGetData[id]= name 
-        getUserOrAdmin[id] = staff
-    })
-    // Admin Validator
-    if (getUserOrAdmin[lastUser]){
-        pageService.innerHTML += `
-        <a href="./addService.html" class="navbar-brand m-1 text-black" style="padding: 15px;">Servicios</a>
-        `
-    }else{
-        window.location.replace("/templates/index.html") 
-    }
+        userGetData[id] = name
 
-    if (lastImg !== "") {
-        imgDiv.innerHTML = `<img src="${lastImg}" style="width: 80px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
-    } else {
-        imgDiv.innerHTML = `<img src="https://img.freepik.com/foto-gratis/disparo-gran-angular-solo-arbol-que-crece-cielo-nublado-puesta-sol-rodeada-cesped_181624-22807.jpg?w=2000" style="width: 100px; height: 80px" class="rounded-circle shadow" alt="Cinque Terre">`
-    }
+    })
+
+    imgDiv.innerHTML = `<img style="width: 10%; background: #E0E0E0; border-radius:50%" src="https://avatars.dicebear.com/api/avataaars/${userGetData[lastUser]}15.svg"/>`
 
     userDiv.innerHTML = `<span style="font-family: Tahoma; text-transform: capitalize; text-size:25px"><b>${userGetData[lastUser]}</b></span>`//User Data
 }
@@ -99,11 +80,11 @@ getUsersData()
 /*-----Fin almacen-----*/
 
 /* ADD SERVICE */
-formAdd.onsubmit = async function(event){
+formAdd.onsubmit = async function (event) {
     event.preventDefault();
     const body = {};
     inputs.forEach((input) => (body[input.name] = input.value));
-    try{
+    try {
         const response = await fetch(urlServices, {
             method: "POST",
             headers: {
@@ -112,65 +93,65 @@ formAdd.onsubmit = async function(event){
             },
             body: JSON.stringify(body),
         });
-        
-        if (response.status === 401){ // * Redirige al login
-            Swal.fire( 
+
+        if (response.status === 401) { // * Redirige al login
+            Swal.fire(
                 "Tu token ha vencido",
                 "Registrate nuevamente",
                 "error",
-            ).then((result)=>{
-                if(result.isConfirmed){
-                    window.location.replace("/templates/login/login.html") 
-                }else{
-                    window.location.replace("/templates/login/login.html") 
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace("/templates/login/login.html")
+                } else {
+                    window.location.replace("/templates/login/login.html")
                 }
             });
             removeLocalStorage()
         }
-        else if (response.ok){ // * Validaciones
+        else if (response.ok) { // * Validaciones
             Swal.fire(
                 "¡Servicio Añadido!",
                 "",
                 "success",
-                ).then((result)=>{
-                    if(result.isConfirmed){
-                        location.reload();
-                    }else{
-                        location.reload();
-                    }   
-                });
-        }else if (body.service-name === ""|| body.description === "" || body.logo === ""){
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                } else {
+                    location.reload();
+                }
+            });
+        } else if (body.service - name === "" || body.description === "" || body.logo === "") {
             Swal.fire({
-                text : "¡Por favor, completa los campos!",
-                icon : "warning"
+                text: "¡Por favor, completa los campos!",
+                icon: "warning"
             });
         }
-        else{
+        else {
             Swal.fire({
                 title: 'Oops...',
                 text: '¡Algo salio mal!',
-                icon : "error"
+                icon: "error"
             });
         }
-    
-    }catch(error){
+
+    } catch (error) {
         console.log(error)
     }
 
 }
 
 /* EDIT SERVICE */
-formEdit.onsubmit = async function(event){
+formEdit.onsubmit = async function (event) {
     event.preventDefault();
     const body = {
-        id : selectIdService.value,
+        id: selectIdService.value,
     };
     inputsEditName.forEach((input) => (body[input.name] = input.value));
     inputsEditDesc.forEach((input) => (body[input.name] = input.value));
     inputsEditLogo.forEach((input) => (body[input.name] = input.value));
 
-    try{
-        const response = await fetch(urlServices+selectIdService.value+"/", {
+    try {
+        const response = await fetch(urlServices + selectIdService.value + "/", {
             method: "PUT",
             headers: {
                 Authorization: `Bearer ${lastToken}`,
@@ -178,52 +159,49 @@ formEdit.onsubmit = async function(event){
             },
             body: JSON.stringify(body),
         });
-        // console.log(body)
-        // console.log(response)
 
-
-        if (response.status === 401){ // * Redirige al login
-            Swal.fire( 
+        if (response.status === 401) { // * Redirige al login
+            Swal.fire(
                 "Tu token ha vencido",
                 "Registrate nuevamente",
                 "error",
-            ).then((result)=>{
-                if(result.isConfirmed){
-                    window.location.replace("/templates/login/login.html") 
-                }else{
-                    window.location.replace("/templates/login/login.html") 
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace("/templates/login/login.html")
+                } else {
+                    window.location.replace("/templates/login/login.html")
                 }
             });
             removeLocalStorage()
         }
-        else if (response.ok){ // * Validaciones
+        else if (response.ok) { // * Validaciones
             Swal.fire(
                 "¡Servicio Editado!",
                 "",
                 "success",
-                ).then((result)=>{
-                    if(result.isConfirmed){
-                        location.reload();
-                    }else{
-                        location.reload();
-                    }
-                });
-        }
-        else if (body.service-name === ""|| body.description === "" || body.logo === ""){
-            Swal.fire({
-                text : "¡Por favor, completa los campos!",
-                icon : "warning"
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                } else {
+                    location.reload();
+                }
             });
         }
-        else{
+        else if (body.service - name === "" || body.description === "" || body.logo === "") {
+            Swal.fire({
+                text: "¡Por favor, completa los campos!",
+                icon: "warning"
+            });
+        }
+        else {
             Swal.fire({
                 title: 'Oops...',
                 text: '¡Algo salio mal!',
-                icon : "error"
+                icon: "error"
             });
         }
-    
-    }catch(error){
+
+    } catch (error) {
         console.log(error)
     }
 
@@ -231,27 +209,27 @@ formEdit.onsubmit = async function(event){
 
 const viewService = document.querySelector(".services-list")
 //* MOSTRAR Servicios
-async function getServices(){
-    try{
+async function getServices() {
+    try {
 
         // Service Response
-        const response = await fetch(urlServices,{
-            headers:{
+        const response = await fetch(urlServices, {
+            headers: {
                 Authorization: `Bearer ${lastToken}`
-            }   
+            }
         });
 
         // Redirige al login
-        if (response.status === 401){
-            Swal.fire( 
+        if (response.status === 401) {
+            Swal.fire(
                 "Tu token ha vencido",
                 "Registrate nuevamente",
                 "error",
-            ).then((result)=>{
-                if(result.isConfirmed){
-                    window.location.replace("/templates/login/login.html") 
-                }else{
-                    window.location.replace("/templates/login/login.html") 
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.replace("/templates/login/login.html")
+                } else {
+                    window.location.replace("/templates/login/login.html")
                 }
             });
             removeLocalStorage()
@@ -259,8 +237,8 @@ async function getServices(){
 
         // Render Services
         const data = await response.json();
-        data.forEach((service)=>{
-            viewService.innerHTML+=`
+        data.forEach((service) => {
+            viewService.innerHTML += `
                     <tr class="text-center">
                         <td id="delete-service-id">${service.id}</td>
                         <td>${service.name}</td>
@@ -270,7 +248,7 @@ async function getServices(){
             ` ;
 
         })
-    }catch(error){
+    } catch (error) {
         console.log(error)
     }
 
@@ -278,6 +256,6 @@ async function getServices(){
 getServices()
 
 //! Borrar Local Storage
-function removeLocalStorage(){
+function removeLocalStorage() {
     localStorage.clear();
 }
